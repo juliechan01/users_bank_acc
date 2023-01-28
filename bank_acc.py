@@ -2,18 +2,21 @@ class User:
     def __init__(self, name, email):
         self.name = name
         self.email = email
-        self.account = BankAccount(int_rate = 0.02, balance = 0)
-        BankAccount.all_acc.append(User)
+        self.account = BankAccount(int_rate = 0.04, bal = 0)
+        # BankAccount.all_acc.append(User)
 
     # other methods
     def make_deposit(self, amount):
-        BankAccount.deposit()
+        self.account.deposit()
+        return self
 
     def make_withdrawal(self, amount):
-        BankAccount.withdraw()
+        self.account.withdraw()
+        return self
 
-    def display_user_bal():
-        print(f"Your current balance is ${BankAccount.bal}.")
+    def display_user_bal(self):
+        print(f"Your current balance is ${self.bal}.")
+        return self
 
 class BankAccount:
     bank_name = "JP Morgan Chase"
@@ -28,6 +31,7 @@ class BankAccount:
         amount = int(amount)
         self.bal = self.bal + amount
         print(f"You now have a balance of ${self.bal}")
+        return self
 
     def withdraw(self):
         amount = input("How much would you like to withdraw today?\n")
@@ -84,6 +88,4 @@ class BankAccount:
             else:
                 print("Thank you for banking with us. Have a nice day!")
 
-User("Julie Chan", "juliechan03@gmail.com") = (0.04, 10000)
-User("Andrew Fowler", "drewtotha@gmail.com") = (0.04, 10000)
-BankAccount.all_acc()
+user1 = User("Julie Chan", "juliechan03@gmail.com")
