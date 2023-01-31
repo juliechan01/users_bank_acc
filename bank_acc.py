@@ -2,21 +2,26 @@ class User:
     def __init__(self, name, email):
         self.name = name
         self.email = email
-        self.account = BankAccount(int_rate = 0.04, bal = 0)
-        # BankAccount.all_acc.append(User)
+        self.account = {'checking':BankAccount(int_rate = 0.04, bal = 0), 'savings':BankAccount(int_rate = 0.09, bal = 0)}
 
     # other methods
-    def make_deposit(self, amount):
-        self.account.deposit()
+    def make_deposit(self):
+        dep = input("What account would you like to deposit into?\nChecking\nSavings\n")
+        self.account[dep].deposit()
         return self
 
-    def make_withdrawal(self, amount):
-        self.account.withdraw()
+    def make_withdrawal(self):
+        draw = input("Which account would you like to withdraw from?\nChecking\nSavings\n")
+        self.account[draw].withdraw()
         return self
 
     def display_user_bal(self):
-        print(f"Your current balance is ${self.bal}.")
+        info = input("Which account's balance would you like to see?\nChecking\nSavings\n")
+        self.account[info].display_account_info()
         return self
+
+    def make_transfer(self, other_user):
+        self.account['checking'].transfer_money(other_user)
 
 class BankAccount:
     bank_name = "JP Morgan Chase"
@@ -25,6 +30,7 @@ class BankAccount:
     def __init__(self, int_rate, bal): 
         self.int_rate = int_rate
         self.bal = bal
+        BankAccount.all_acc.append(self)
 
     def deposit(self):
         amount = input("How much would you like to deposit today?\n")
@@ -52,13 +58,13 @@ class BankAccount:
 
     def display_account_info(self):
         print(f"Balance: ${self.bal}")
-        m = input(f"Welcome to {BankAccount.bank_name}. What would you like to do today?\n Deposit\n Withdraw\nTransfer\n")
+        m = input(f"Welcome to {BankAccount.bank_name}. What would you like to do today?\n Deposit\n Withdraw\n Transfer\n")
         if m == "deposit":
             self.deposit()
         elif m == "withdraw":
             self.withdraw()
         elif m == "transfer":
-            self.transfer_money()
+            self.transfer_money(other_user)
         else:
             print("Thank you for banking with us. Have a nice day!")
 
@@ -69,23 +75,26 @@ class BankAccount:
     def change_bank(cls, name):
         cls.bank_name = name
 
-    def transfer_money(self, amount, other_user):
-        other_user = input("Who would you like to transfer?\n")
-        amount = input("How much money would you like to transfer to them?\n")
-        confirm = input(f"You would like to transfer ${amount} to {other_user}. Do you confirm? Y or N\n")
+    def transfer_money(self, other_user):
+        amount = input(f"How much money would you like to transfer to {other_user.name}?\n")
+        amount = int(amount)
+        confirm = input(f"You would like to transfer ${amount} to {other_user.name}. Do you confirm? Y or N\n")
         if confirm == "y":
             self.bal = self.bal - amount
             BankAccount.all_acc[1].bal = self.bal + amount #fix this
-            print(f"{User} has sent you ${amount} and it's ready now.")
+            print(f"{self.name} has sent you ${amount} and it's ready now.")
         else:
-            ask = input("Would you like to do anything else? Deposit\n Withdraw\n Transfer\n")
+            ask = input("Would you like to do anything else?\n Deposit\n Withdraw\n Transfer\n")
             if ask == "deposit":
                 self.deposit()
             elif ask == "withdraw":
                 self.withdraw()
             elif ask == "transfer":
-                self.transfer_money()
+                self.transfer_money(other_user)
             else:
                 print("Thank you for banking with us. Have a nice day!")
 
 user1 = User("Julie Chan", "juliechan03@gmail.com")
+user2 = User("Annie Tu", "annietu4@gmail.com")
+user1.make_deposit()
+user1.make_transfer(user2)
